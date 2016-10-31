@@ -8,6 +8,15 @@ class TreeExample extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      selected: []
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      selected: ['0-0-0', '0-1-0', '0-1-1', '0-1-2']
+    }) 
   }
 
   render() {
@@ -21,7 +30,7 @@ class TreeExample extends React.Component {
     		<Tree multiple commbox data={generateData()}  defaultChecked={['0-0-0', '0-1-0', '0-1-1', '0-1-2']} defaultExpanded={['0-1']}/>
 
         <h3>多选</h3>
-        <Tree multiple commbox data={generateData(10, 5, 2)} defaultChecked={['0-7']}/>
+        <Tree multiple data={generateData(10, 5, 2)}  defaultSelected={this.state.selected}  selected={this.state.selected} defaultExpanded={['0-1']}/>
     	</div>     
     );
 

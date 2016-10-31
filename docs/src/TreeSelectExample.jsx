@@ -56,57 +56,6 @@ const treeData = [{
 							}]
 				}]
 		}]
-},{
-  id: '1',
-  text: '北京市',
-  node_key: '12',
-  children: [{
-      id: '1-0',
-      text: '平谷区',
-      node_key:'21',
-      children: [{
-          id: '1-0-0',
-          node_key:'21',
-            text: '夏谷庄镇',
-            children: [{
-                id: '1-0-0-0',
-                node_key:'21',
-                text: '马各庄村'
-              }]
-        }]
-    }, {
-      id: '1-1',
-      text: '顺义区',
-      node_key:'21',
-      children: [{
-          id: '1-1-0',
-          node_key:'21',
-            text: '杨镇',
-            children: [{
-                id: '1-1-0-0',
-                node_key:'21',
-                text: '李各庄村'
-              }, {
-                id: '1-1-0-1',
-                node_key:'21',
-                text: '一街村'
-              }, {
-                id: '1-1-0-2',
-                node_key:'21',
-                text: '二郎庙村'
-              }]
-        }, {
-          id: '1-1-1',
-          node_key:'21',
-            text: '木林镇',
-            node_key:'21',
-            children: [{
-                id: '1-1-1-0',
-                node_key:'21',
-                text: '荣各庄村'
-              }]
-        }]
-    }]
 }]
 
 class TreeSelectExample extends React.Component {
@@ -155,21 +104,29 @@ class TreeSelectExample extends React.Component {
   	const { expandAll, checked, treeData } = this.state
   	
     return (
-    	<Select search style={{width: 200}} menuStyle={{minWidth: 200, maxHeight: 300}}>
+    	<Select search style={{width: 200}} menuStyle={{minWidth: 200, maxHeight: 300}} onClear={this.onClear.bind(this)}>
     		<div style={toolbarStyle}>
     			<a href="javascript:;" style={linkStyle} onClick={this.toggleExpand.bind(this)}>展开 / 收缩</a>
     		</div>
     		<Tree 
     			expandAll={expandAll} 
           defaultExpanded={['1', '0-1']}
+          multiple
+          commbox
     			data={treeData}
-    			selected={checked}
+    			checked={checked}
     			onExpand={this.onExpand}
     			onSelect={this.onSelect}
     			onCheck={this.onCheck}
     			onChange={this.onChange}/>
     	</Select>      
     );
+  }
+
+  onClear() {
+    this.setState({
+      checked: []
+    })
   }
 
   onExpand(expanded, node) {

@@ -77,8 +77,7 @@ class TreeNode extends React.Component {
       )
   }
 
-  onExpand() {
-    // console.log('onExpand', this)
+  onExpand(e) {
     const { expanded, onExpand } = this.props
     onExpand(!expanded, this)
   }
@@ -89,7 +88,9 @@ class TreeNode extends React.Component {
     if (!multiple && commbox) {
       onCheck(booleanToCheckState(!selected), this)
     } else {
-      onSelect(!selected, this)
+      // 单选变更为已经选中的情况再次点击就直接关闭
+      //
+      multiple ? onSelect(!selected, this) : onSelect(true, this)
     }
   }
 

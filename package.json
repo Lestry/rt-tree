@@ -1,6 +1,6 @@
 {
-  "name": "rt-select",
-  "version": "1.0.8",
+  "name": "rt-tree",
+  "version": "1.0.0",
   "description": "tree, select, tree-select ui component for react",
   "main": "lib/index.js",
   "scripts": {
@@ -10,11 +10,12 @@
     "build": "NODE_ENV=production gulp",
     "buildCmd": "set NODE_ENV=production&& gulp",
     "build-docs": "npm run clean && NODE_ENV=production webpack --config webpack-docs-prod.config.js --display-modules",
-    "clean": "rimraf docs/assets/"
+    "clean": "rimraf docs/assets/",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lzcmaro/rt-select.git"
+    "url": "git+https://github.com/tiseny/rt-tree.git"
   },
   "files": [
     "dist",
@@ -31,9 +32,9 @@
   "author": "lzcmaro",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lzcmaro/rt-select/issues"
+    "url": "https://github.com/tiseny/rt-tree/issues"
   },
-  "homepage": "https://github.com/lzcmaro/rt-select#readme",
+  "homepage": "https://github.com/tiseny/rt-tree#readme",
   "peerDependencies": {
     "react": "^0.14.5",
     "react-dom": "^0.14.5"
@@ -83,5 +84,8 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.14"
+  },
+  "directories": {
+    "doc": "docs"
   }
 }

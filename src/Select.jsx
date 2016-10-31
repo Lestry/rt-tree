@@ -85,7 +85,8 @@ class Select extends React.Component {
     /**
      * 用于阻止事件冒泡，参考react-overlay的做法
      */
-    this._suppressRootId = Symbol('__click_was_inside__')
+    // 用了symbol 命名后，导致栈溢出.. 原因未知
+    this._suppressRootId = '__click_rt_select_was_inside__'
     this._suppressRootCloseHandler = (event) => {
       event.nativeEvent[this._suppressRootId] = true
       event.stopPropagation()
@@ -110,7 +111,8 @@ class Select extends React.Component {
     return (
     	<div {...otherProps} className={classnames(className, prefixCls)}>
     		<div className={`${prefixCls}-head`} onClick={this.toggleMenuVisible}>
-          <label>{this.state.inputValue}</label>
+          <label title={this.state.inputValue}>{this.state.inputValue}</label>
+          {this.state.inputValue ? <span className="clear-value-icon" onClick={this.clearSelected.bind(this)}>×</span> : null}
           <div className="dropdown-toggle"><i/></div>
         </div>
         {this.renderMenu()}
@@ -284,7 +286,6 @@ class Select extends React.Component {
     if (e[this._suppressRootId]) {
       return;
     }
-
     this.toggleMenuVisible()
   }
 
@@ -370,6 +371,11 @@ class Select extends React.Component {
     initial ? (this.state.inputValue = inputValue) : this.setState({ inputValue })
   }
 
+  clearSelected(e) {
+    e.stopPropagation()
+    this.props.onClear()
+  }
+
   handleSearchInputChange() {
     const searchInputValue = this.refs[this.searchInputRef].value
     let result
@@ -411,7 +417,7 @@ class Select extends React.Component {
       }
     })
 
-    const afterFilter = this.filterExpanedTree( tree.export())
+    const afterFilter = this.filterExpanedTree( tree.export() )
     // 重置
     this.dataTree.import(data.slice())
 

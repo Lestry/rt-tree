@@ -58,12 +58,12 @@ class Tree extends React.Component {
      * 把数据导入到DataTree中，方便后面搜索用
      */
     this.dataTree = new DataTree().import(props.data.slice())
+
   }
 
   componentWillReceiveProps(nextProps) {
     const { data, dataMode, checked, selected, expanded, expandAll } = this.props
     let { treeDatas, checkedMaps, selectedMaps, expandedMaps } = this.state
-
     // 数据改变时，重设map数据，避免存在脏数据
     if (data !== nextProps.data || dataMode !== nextProps.dataMode) {
       this.nodeMaps = {}
@@ -73,6 +73,7 @@ class Tree extends React.Component {
 
       treeDatas = nextProps.data
       this.dataTree.import(data.slice())
+      
     }
 
     if (checked !== nextProps.checked) {
@@ -129,6 +130,11 @@ class Tree extends React.Component {
       multiple ? values.forEach(item => (map[item] = CHECKBOX_CHECKED)) : map[ values[0] ] = CHECKBOX_CHECKED
     }
 
+    // 如果values为空的情况，应当清空原有数据
+    if (values.length == 0) {
+      this.checkedNodes = []
+    }
+
     return map
   }
 
@@ -140,6 +146,11 @@ class Tree extends React.Component {
 
     // 单选模式下，只选取第一个值
     multiple ? values.forEach(item => (map[item] = true)) : map[ values[0] ] = true
+
+    // 如果values为空的情况，应当清空原有数据
+    if (values.length == 0) {
+      this.selectedNodes = []
+    }
 
     return map
   }
@@ -243,6 +254,7 @@ class Tree extends React.Component {
   }
 
   onSelect(selected, node) {
+    // 此处需要合并selected 。
     const { selectedMaps } = this.state
     const { multiple, commbox, onSelect } = this.props
     const { value, data } = node.props
@@ -312,10 +324,11 @@ class Tree extends React.Component {
       this[dataKey] = [data]
     }
   }
-
+  // 此处有更改
   fireChange(info) {
-    const { multiple, commbox, onChange } = this.props
+    const { multiple, commbox, onChange, defaultChecked, defaultSeleced, checked } = this.props
     const { selected, value, data, node, selectedNodes } = info
+    let propsValues = (defaultChecked || checked) || (defaultSeleced || this.props.selected)
 
     if (multiple) {
       let values = [], datas = []
@@ -323,7 +336,30 @@ class Tree extends React.Component {
         values.push( data.id )
         datas.push( data )
       })
+      // 如果是选中的情形下
+      if (selected) {
+        propsValues.forEach(item => {
+          if (!this.contains(item, values)) {
+            values.push( item )
+            datas.push( this.getNodeById(value) )
+          }
+        })  
+      } else {
+        if (!commbox) {
+          values = [], datas = []
+          // 找到所在位置
+          let index = this.indexOf(value, propsValues)
 
+          if (index > -1) {
+            propsValues.splice(index, 1)
+          }
+          propsValues.forEach(item => {
+            values.push( item )
+            datas.push( this.getNodeById(item) )
+          })
+        }
+        
+      }
       onChange(values, datas, node)
     } else {
       // 单项选择，在取消选中时，返回空
@@ -449,6 +485,77 @@ class Tree extends React.Component {
     }
   }
 
+  /**
+   * 包含 contains 
+   * @return {[type]} [description]
+   */
+  contains(id, container) {
+    let bool = false
+    container.forEach(item => {
+      if (item === id) {
+        return bool = true
+      }
+    })
+    return bool
+  }
+
+  indexOf(id, container) {
+    let i = -1
+    container.forEach((item,key) => {
+      if (item === id) {
+        return i = key
+      }
+    })
+    return i
+  }
+
+  getNodeById (id) {
+    const tree = this.dataTree
+    let targetNode = null
+    tree.traverseDFS((node) => {
+      // 如果存在多各根节点的情形
+      if (node._depth == 1 && node._childNodes.length > 1) {
+        node._childNodes.forEach(nodeItem => {
+          if (nodeItem._data.id === id) {
+            return targetNode = nodeItem._data
+          } 
+        })
+      } else {
+        if (node._data.id === id) {
+          targetNode = node._data
+        } 
+      }
+    })
+    return targetNode
+  }
+
+  getDirectParentNode (id) {
+    const tree = this.dataTree
+    let targetNode = null
+    tree.traverseDFS((node) => {
+      // 如果存在多各根节点的情形
+      if (node._depth == 1 && node._childNodes.length > 1) {
+        node._childNodes.forEach(nodeItem => {
+          nodeItem.getAncestry().forEach(item => {
+            item._data.children.forEach(child => {
+              if (child.id == id) {
+                return targetNode = item._data
+              }
+            })
+          })
+        })
+      } else {
+        node.getAncestry().forEach(item => {
+          item._data.children.forEach(child => {
+            if (child.id == id) {
+              return targetNode = item._data
+            }
+          })
+        })
+      }
+    })
+    return targetNode 
+  }
 }
 
 Tree.propTypes = {
