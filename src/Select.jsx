@@ -106,13 +106,13 @@ class Select extends React.Component {
   }
 
   render() {
-  	const { className, prefixCls, children, ...otherProps } = this.props
+  	const { className, prefixCls, children, onClear, ...otherProps } = this.props
 
     return (
     	<div {...otherProps} className={classnames(className, prefixCls)}>
     		<div className={`${prefixCls}-head`} onClick={this.toggleMenuVisible}>
           <label title={this.state.inputValue}>{this.state.inputValue}</label>
-          {this.state.inputValue ? <span className="clear-value-icon" onClick={this.clearSelected.bind(this)}>×</span> : null}
+          {this.state.inputValue && onClear ? <span className="clear-value-icon" onClick={this.clearSelected.bind(this)}>×</span> : null}
           <div className="dropdown-toggle"><i/></div>
         </div>
         {this.renderMenu()}
@@ -373,7 +373,7 @@ class Select extends React.Component {
 
   clearSelected(e) {
     e.stopPropagation()
-    this.props.onClear()
+    this.props.onClear && this.props.onClear()
   }
 
   handleSearchInputChange() {
@@ -516,7 +516,11 @@ Select.propTypes = {
   /**
    * 选中时，是否自动关闭下拉菜单（仅单选有效）
    */
-  selectToClose: PropTypes.bool
+  selectToClose: PropTypes.bool,
+  /**
+   * onClear 
+   */
+  onClear: PropTypes.func
 }
 
 Select.defaultProps = {
