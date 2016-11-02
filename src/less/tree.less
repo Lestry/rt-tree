@@ -21,7 +21,16 @@
 		white-space: nowrap;
 		outline: 0;
 		line-height: 24px;
-
+		position: relative;
+		.customer-node{
+			position: absolute;
+			top: 0;
+			right: 0;
+			&.hover{
+				display: none;
+			}
+		}
+		
 		> i {
 			display: block;
 	    float: left;

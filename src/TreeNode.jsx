@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import classnames from 'classnames'
-
+import $ from "jquery";
+window.$ = window.jQuery = $;
 import { noop, CHECKBOX_CHECKED, CHECKBOX_UNCHECKED, CHECKBOX_PARTIAL, booleanToCheckState } from './helpers/util'
 
 class TreeNode extends React.Component {
@@ -19,7 +20,7 @@ class TreeNode extends React.Component {
 
   render() {
     const props = this.props
-    const { value, text, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children } = props
+    const { value, text, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children, customerNode } = props
     const classes = {
       [prefixCls]: true,
       // 展开节点后的样式
@@ -29,13 +30,14 @@ class TreeNode extends React.Component {
     }
   	
     return (
-    	<li className={classnames(className, classes)} aria-value={value} aria-expanded={expanded} aria-selected={selected}>
+    	<li className={classnames(className, classes)} onMouseOver={this.handleHoverCustomer.bind(this,'in')} onMouseOut={this.handleHoverCustomer.bind(this,'out')} aria-value={value} aria-expanded={expanded} aria-selected={selected}>
         {/** 叶节点，只添加空白的占位元素，用于文本对齐 **/}
         {this.isLeaf() ? <i /> : <i className="icon-arrow" onClick={this.onExpand}/>}
         {/** 添加commbox **/}
         {this.renderCommbox()}
         <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}</a>
         {children}
+        {customerNode && this.renderCustomerNode()}
       </li>     
     );
   }
@@ -52,6 +54,15 @@ class TreeNode extends React.Component {
     return (
         <i className={commboxCls} onClick={this.onCheck} aria-checked={checked} />
       )
+  }
+
+  renderCustomerNode() {
+    const { customerNode, data } = this.props
+    return customerNode.onAdd && (
+      <div className={classnames('customer-node',{hover: customerNode.hover})}>
+        {customerNode.onAdd(data)}   
+      </div>
+    )
   }
 
   isLeaf() {
@@ -75,6 +86,25 @@ class TreeNode extends React.Component {
           }, tree)}
         </ul>
       )
+  }
+
+  handleHoverCustomer(type,e) {
+    e.stopPropagation();
+    const { customerNode, prefixCls } = this.props
+    if(!(customerNode && customerNode.hover)) return false;
+
+    let target = $(e.target)
+
+    let straigtNode = target.hasClass(prefixCls) ? target : target.closest('.' + prefixCls)
+
+    switch(type){
+      case 'in' : {
+        straigtNode.children('.customer-node').show()
+      }; break;
+      case 'out' : {
+        straigtNode.find('.customer-node').hide()
+      }; break;
+    }
   }
 
   onExpand(e) {
@@ -162,7 +192,15 @@ TreeNode.propTypes = {
    * 展开或收缩节点时的回调事件
    * @type {[function(isExpanded, node)]}
    */
-  onExpand: PropTypes.func
+  onExpand: PropTypes.func,
+  /**
+   * 增加自定义的节点
+   * @type {[function(node)]}
+   */
+  customerNode: PropTypes.shape({
+    onAdd: PropTypes.func, // 添加函数
+    hover: PropTypes.bool // 触发点
+  })
 }
 
 TreeNode.defaultProps = {

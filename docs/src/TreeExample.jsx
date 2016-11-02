@@ -19,8 +19,17 @@ class TreeExample extends React.Component {
     }) 
   }
 
+  handleClick(node){
+    console.log(node)
+  }
+
   render() {
-  	
+  	const customerNode = {
+      onAdd: (node) => {
+        return <a onClick={this.handleClick.bind(this,node)}>增加</a>
+      },
+      hover: true
+    }
     return (
     	<div>
         <h3>单选</h3>
@@ -30,7 +39,14 @@ class TreeExample extends React.Component {
     		<Tree multiple commbox data={generateData()}  defaultChecked={['0-0-0', '0-1-0', '0-1-1', '0-1-2']} defaultExpanded={['0-1']}/>
 
         <h3>多选</h3>
-        <Tree multiple data={generateData(10, 5, 2)}  defaultSelected={this.state.selected}  selected={this.state.selected} defaultExpanded={['0-1']}/>
+        <Tree 
+          multiple 
+          data={generateData(10, 5, 2)}  
+          defaultSelected={this.state.selected}  
+          selected={this.state.selected} 
+          defaultExpanded={['0-1']}
+          customerNode={customerNode}
+        />
     	</div>     
     );
 

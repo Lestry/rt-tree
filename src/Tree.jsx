@@ -192,7 +192,7 @@ class Tree extends React.Component {
     }
 
     const { expandedMaps, selectedMaps, checkedMaps } = this.state
-    const { multiple, commbox, animate } = this.props
+    const { multiple, commbox, animate, customerNode } = this.props
     const { id: value, text, children } = nodeData
     const path = nodeData.path || `${prePath}-${index}`
     const selected = selectedMaps[value] || false
@@ -210,6 +210,7 @@ class Tree extends React.Component {
       value,
       text,
       path,
+      customerNode,
       selected, 
       checked,
       expanded,
@@ -233,7 +234,7 @@ class Tree extends React.Component {
     }
 
     // 节点的ref为`node-${path}`的方式，为方便通过ID获取节点对象，这里把node缓存起来
-    return this.nodeMaps[value] = (<TreeNode {...nodeProps}>{childNodes}</TreeNode>)
+    return this.nodeMaps[value] = (<TreeNode {...nodeProps} >{childNodes}</TreeNode>)
   }
 
   /**
@@ -648,7 +649,15 @@ Tree.propTypes = {
    * 选中的节点发生变化时的回调事件
    * @type {[function(value, data, node)]}
    */
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  /**
+   * 增加自定义的节点
+   * @type {[function(node)]}
+   */
+  customerNode: PropTypes.shape({
+    onAdd: PropTypes.func, // 添加函数
+    hover: PropTypes.bool // 触发点
+  })
 }
 
 Tree.defaultProps = {
