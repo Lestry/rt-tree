@@ -111,7 +111,7 @@ class Select extends React.Component {
     return (
     	<div {...otherProps} className={classnames(className, prefixCls)}>
     		<div className={`${prefixCls}-head`} onClick={this.toggleMenuVisible}>
-          <label title={this.state.inputValue}>{this.state.inputValue}</label>
+          <label title={this.state.inputValue || this.props.placeholder}>{this.state.inputValue || this.props.placeholder}</label>
           {this.state.inputValue && onClear ? <span className="clear-value-icon" onClick={this.clearSelected.bind(this)}>×</span> : null}
           <div className="dropdown-toggle"><i/></div>
         </div>
@@ -520,7 +520,12 @@ Select.propTypes = {
   /**
    * onClear 
    */
-  onClear: PropTypes.func
+  onClear: PropTypes.func,
+  /**
+   * [placeholder description]
+   * @type {[type]}
+   */
+  placeholder: PropTypes.string
 }
 
 Select.defaultProps = {
