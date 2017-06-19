@@ -192,13 +192,14 @@ class Tree extends React.Component {
     }
 
     const { expandedMaps, selectedMaps, checkedMaps } = this.state
-    const { multiple, commbox, animate, customerNode } = this.props
+    const { multiple, commbox, animate, customerNode, customerIcon } = this.props
     const { id: value, text, children } = nodeData
     const path = nodeData.path || `${prePath}-${index}`
     const selected = selectedMaps[value] || false
     const checked = checkedMaps[value] || CHECKBOX_UNCHECKED
     const expanded = expandedMaps[value] || false
     const leaf = !children || children.length <= 0
+    const _customerIcon = customerIcon && typeof customerIcon == 'function' ? customerIcon(nodeData) : null  
     let childNodes
 
     let nodeProps = {
@@ -206,6 +207,7 @@ class Tree extends React.Component {
       key: path,
       data: nodeData,
       childData: children,
+      customerIcon: _customerIcon,
       parentData,
       value,
       text,
@@ -657,7 +659,13 @@ Tree.propTypes = {
   customerNode: PropTypes.shape({
     onAdd: PropTypes.func, // 添加函数
     hover: PropTypes.bool // 触发点
-  })
+  }),
+
+  // customerIcon
+  // params ｛item｝当前结点数据
+  // 对自定义icon的 处理函数
+  // return ｛string｝的class
+  customerIcon: PropTypes.func 
 }
 
 Tree.defaultProps = {

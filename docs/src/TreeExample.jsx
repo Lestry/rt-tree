@@ -33,7 +33,7 @@ class TreeExample extends React.Component {
     return (
     	<div>
         <h3>单选</h3>
-        <Tree commbox width={250} height={350} data={generateData()}  defaultChecked={['0-1-0']} defaultExpanded={['0-1']}/>
+        <Tree commbox width={250} height={350} data={generateData()}  defaultChecked={['0-1-0']} defaultExpanded={['0-1']} customerIcon={this.genrateIcon}/>
 
         <h3>多选</h3>
     		<Tree multiple commbox data={generateData()}  defaultChecked={['0-0-0', '0-1-0', '0-1-1', '0-1-2']} defaultExpanded={['0-1']}/>
@@ -49,7 +49,6 @@ class TreeExample extends React.Component {
         />
     	</div>     
     );
-
   }
 }
 

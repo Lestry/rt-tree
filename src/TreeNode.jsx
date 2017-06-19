@@ -20,7 +20,7 @@ class TreeNode extends React.Component {
 
   render() {
     const props = this.props
-    const { value, text, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children, customerNode } = props
+    const { value, text, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children, customerNode, customerIcon } = props
     const classes = {
       [prefixCls]: true,
       // 展开节点后的样式
@@ -29,12 +29,15 @@ class TreeNode extends React.Component {
       [`${prefixCls}-checked`]: checked
     }
   	
+    console.log(customerIcon)
+
     return (
     	<li className={classnames(className, classes)} onMouseOver={this.handleHoverCustomer.bind(this,'in')} onMouseOut={this.handleHoverCustomer.bind(this,'out')} aria-value={value} aria-expanded={expanded} aria-selected={selected}>
         {/** 叶节点，只添加空白的占位元素，用于文本对齐 **/}
         {this.isLeaf() ? <i /> : <i className="icon-arrow" onClick={this.onExpand}/>}
         {/** 添加commbox **/}
         {this.renderCommbox()}
+        {customerIcon}
         <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}</a>
         {children}
         {customerNode && this.renderCustomerNode()}
@@ -200,10 +203,16 @@ TreeNode.propTypes = {
   customerNode: PropTypes.shape({
     onAdd: PropTypes.func, // 添加函数
     hover: PropTypes.bool // 触发点
-  })
+  }),
+  // 增加 icon 自定义树形
+  customerIcon: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.node
+  ])
 }
 
 TreeNode.defaultProps = {
+  customerIconClass: '',
   prefixCls: 'rt-tree-node',
   onSelect: noop,
   onCheck: noop,
