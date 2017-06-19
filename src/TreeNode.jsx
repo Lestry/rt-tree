@@ -29,8 +29,6 @@ class TreeNode extends React.Component {
       [`${prefixCls}-checked`]: checked
     }
   	
-    console.log(customerIcon)
-
     return (
     	<li className={classnames(className, classes)} onMouseOver={this.handleHoverCustomer.bind(this,'in')} onMouseOut={this.handleHoverCustomer.bind(this,'out')} aria-value={value} aria-expanded={expanded} aria-selected={selected}>
         {/** 叶节点，只添加空白的占位元素，用于文本对齐 **/}
