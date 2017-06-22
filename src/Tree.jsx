@@ -192,7 +192,7 @@ class Tree extends React.Component {
     }
 
     const { expandedMaps, selectedMaps, checkedMaps } = this.state
-    const { multiple, commbox, animate, customerNode, customerIcon } = this.props
+    const { multiple, commbox, animate, customerNode, customerIcon, disabled } = this.props
     const { id: value, text, children } = nodeData
     const path = nodeData.path || `${prePath}-${index}`
     const selected = selectedMaps[value] || false
@@ -200,14 +200,16 @@ class Tree extends React.Component {
     const expanded = expandedMaps[value] || false
     const leaf = !children || children.length <= 0
     const _customerIcon = customerIcon && typeof customerIcon == 'function' ? customerIcon(nodeData) : null  
+    const _disabled = typeof disabled == 'boolean' ? disabled : (typeof disabled == 'function' ? disabled(nodeData) : false)
     let childNodes
-
+    
     let nodeProps = {
       ref: `node-${path}`,
       key: path,
       data: nodeData,
       childData: children,
       customerIcon: _customerIcon,
+      disabled: _disabled,
       parentData,
       value,
       text,
@@ -665,7 +667,13 @@ Tree.propTypes = {
   // params ｛item｝当前结点数据
   // 对自定义icon的 处理函数
   // return ｛string｝的class
-  customerIcon: PropTypes.func 
+  customerIcon: PropTypes.func,
+  // 禁用单个节点
+  // return boolean
+  disabled: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.func
+  ])
 }
 
 Tree.defaultProps = {

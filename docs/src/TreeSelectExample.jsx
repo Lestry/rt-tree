@@ -111,10 +111,9 @@ class TreeSelectExample extends React.Component {
     		<Tree 
     			expandAll={expandAll} 
           defaultExpanded={['1', '0-1']}
-          multiple
-          commbox
     			data={treeData}
     		  checked={checked}
+          disabled={this.disabled.bind(this)}
     			onExpand={this.onExpand}
     			onSelect={this.onSelect}
     			onCheck={this.onCheck}
@@ -127,6 +126,10 @@ class TreeSelectExample extends React.Component {
     this.setState({
       checked: []
     })
+  }
+
+  disabled(node) {
+    return node.text == '平谷区'
   }
 
   onExpand(expanded, node) {

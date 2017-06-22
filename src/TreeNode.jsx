@@ -20,13 +20,14 @@ class TreeNode extends React.Component {
 
   render() {
     const props = this.props
-    const { value, text, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children, customerNode, customerIcon } = props
+    const { value, text, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children, customerNode, disabled, customerIcon } = props
     const classes = {
       [prefixCls]: true,
       // 展开节点后的样式
       [`${prefixCls}-expanded`]: expanded,
       [`${prefixCls}-selected`]: selected,
-      [`${prefixCls}-checked`]: checked
+      [`${prefixCls}-checked`]: checked,
+      [`${prefixCls}-disabled`]: disabled // 是否禁用
     }
   	
     return (
@@ -170,7 +171,10 @@ TreeNode.propTypes = {
   /**
    * 是否设为disable，让它不可选
    */
-  disabled: PropTypes.bool,
+  disabled: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.func
+  ]),
   /**
    * 是否为叶节点
    */
