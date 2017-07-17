@@ -137,6 +137,9 @@ class TreeSelectExample extends React.Component {
   }
 
   onSelect(selected, value, data, node) {
+    if (data.text == '平谷区') {
+      return false;
+    }
     console.log(arguments)
   	// console.log('onSelect: ', selected, value, data, node)
     // return false 

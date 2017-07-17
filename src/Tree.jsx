@@ -260,11 +260,18 @@ class Tree extends React.Component {
 
   onSelect(selected, node) {
     // 此处需要合并selected 。
-    const { selectedMaps } = this.state
+    const { selectedMaps, expandedMaps } = this.state
     const { multiple, commbox, onSelect } = this.props
     const { value, data } = node.props
 
+    // 新增。如果是被禁用状态. 则单击则展开
     if (onSelect(selected, value, data, node) === false) {
+      const expanded = expandedMaps[node.props.value]
+      
+      this.setState({
+        expandedMaps: {...expandedMaps, [node.props.value]: !expanded}
+      })
+
       return
     }
     
