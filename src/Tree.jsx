@@ -199,7 +199,7 @@ class Tree extends React.Component {
     const checked = checkedMaps[value] || CHECKBOX_UNCHECKED
     const expanded = expandedMaps[value] || false
     const leaf = !children || children.length <= 0
-    const _customerIcon = customerIcon && typeof customerIcon == 'function' ? customerIcon(nodeData) : null  
+    const _customerIcon = customerIcon && typeof customerIcon == 'function' ? customerIcon(nodeData, expanded) : null  
     const _disabled = typeof disabled == 'boolean' ? disabled : (typeof disabled == 'function' ? disabled(nodeData) : false)
     let childNodes
     
