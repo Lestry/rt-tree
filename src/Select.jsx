@@ -124,9 +124,10 @@ class Select extends React.Component {
     const { prefixCls, children, menuStyle, emptyDataText, search, searchInputPlaceholder } = this.props
     const { menuVisible, searchInputValue } = this.state
     const style = {...(menuStyle || {}), display: menuVisible ? 'block' : 'none'}
+    let {maxHeight, ...otherstyle} = style
     
     return (
-      <div style={style} className={`${prefixCls}-menu`} onClick={this._suppressRootCloseHandler}>
+      <div style={otherstyle} className={`${prefixCls}-menu`} onClick={this._suppressRootCloseHandler}>
         {/** TODO: 是否有递归遍历其所有子节点，找到这里需要接管的组件（Tree, List）？**/}
         {React.Children.map(children, child => {
           // 节点为Tree组件时，给它添加相应的属性与事件，以便Tree和Select关联起来
@@ -160,6 +161,7 @@ class Select extends React.Component {
             
             // 添加搜索框
             if (search) {
+              const _maxHeight = maxHeight || 150
               element = (
                 <div>
                   <div className="search-input-wrapper">
@@ -171,7 +173,7 @@ class Select extends React.Component {
                       onChange={this.handleSearchInputChange}/>
                     <i className="icon-search"/>
                   </div>
-                  {element}
+                  <div style={{maxHeight: _maxHeight, overflow: 'auto'}}>{element}</div>
                 </div>
               )
             }

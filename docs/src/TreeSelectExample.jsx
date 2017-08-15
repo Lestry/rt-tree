@@ -104,10 +104,10 @@ class TreeSelectExample extends React.Component {
   	const { expandAll, checked, treeData } = this.state
   	
     return (
-    	<Select search style={{width: 200}} placeholder="请选择" menuStyle={{minWidth: 200, maxHeight: 300}} onClear={this.onClear.bind(this)}>
-    		<div style={toolbarStyle}>
+    	<Select search style={{width: 200}} placeholder="请选择" menuStyle={{minWidth: 200, maxHeight: 180, overflow:'hidden'}} onClear={this.onClear.bind(this)}>
+    		{/*<div style={toolbarStyle}>
     			<a href="javascript:;" style={linkStyle} onClick={this.toggleExpand.bind(this)}>展开 / 收缩</a>
-    		</div>
+    		</div>*/}
     		<Tree 
     			expandAll={expandAll} 
           defaultExpanded={['1', '0-1']}
