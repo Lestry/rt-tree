@@ -1,10 +1,9 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types';
+import React from 'react';
 import classnames from 'classnames'
 
-class List extends React.Component {
-  render() {
-    return null
-  }
+function List(props) {
+  return null
 }
 
 List.elementType = 'List'

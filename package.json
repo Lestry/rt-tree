@@ -1,6 +1,6 @@
 {
   "name": "rt-tree",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "tree, select, tree-select ui component for react",
   "main": "lib/index.js",
   "scripts": {
@@ -36,11 +36,14 @@
   },
   "homepage": "https://github.com/tiseny/rt-tree#readme",
   "peerDependencies": {
-    "react": "^0.14.5",
-    "react-dom": "^0.14.5"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   },
   "dependencies": {
-    "classnames": "^2.2.3"
+    "classnames": "^2.2.5",
+    "prop-types": "^15.6.0",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2"
   },
   "devDependencies": {
     "babel-core": "^6.3.26",
@@ -77,9 +80,8 @@
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
     "nodemon": "^1.8.1",
-    "react": "^0.14.5",
-    "react-dom": "^0.14.5",
     "react-overlays": "^0.6.5",
+    "react-style-px-suffix-codemod": "^1.1.3",
     "react-transform-hmr": "^1.0.1",
     "rimraf": "^2.5.2",
     "style-loader": "^0.13.0",
