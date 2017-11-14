@@ -3,11 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 import classnames from 'classnames'
 import DataTree from './helpers/dataTree'
-import { 
+import {
   noop,
-  ownerDocument, 
+  ownerDocument,
   addEventListener,
-  TREE_ELEMENT, 
+  TREE_ELEMENT,
   LIST_ELEMENT
 } from './helpers/util'
 
@@ -24,7 +24,7 @@ class Select extends React.Component {
       'toggleMenuVisible',
       'handleSearchInputChange',
       'handleDocumentClick'
-    ].forEach((m)=> {
+    ].forEach((m) => {
       this[m] = this[m].bind(this);
     });
 
@@ -107,26 +107,26 @@ class Select extends React.Component {
   }
 
   render() {
-  	const { className, prefixCls, children, onClear, ...otherProps } = this.props
+    const { className, prefixCls, children, onClear, ...otherProps } = this.props
 
     return (
-    	<div {...otherProps} className={classnames(className, prefixCls)}>
-    		<div className={`${prefixCls}-head`} onClick={this.toggleMenuVisible}>
+      <div {...otherProps} className={classnames(className, prefixCls)}>
+        <div className={`${prefixCls}-head`} onClick={this.toggleMenuVisible}>
           <label title={this.state.inputValue || this.props.placeholder}>{this.state.inputValue || this.props.placeholder}</label>
           {this.state.inputValue && onClear ? <span className="clear-value-icon" onClick={this.clearSelected.bind(this)}>×</span> : null}
-          <div className="dropdown-toggle"><i/></div>
+          <div className="dropdown-toggle"><i /></div>
         </div>
         {this.renderMenu()}
-    	</div>      
+      </div>
     );
   }
 
   renderMenu() {
     const { prefixCls, children, menuStyle, emptyDataText, search, searchInputPlaceholder } = this.props
     const { menuVisible, searchInputValue } = this.state
-    const style = {...(menuStyle || {}), display: menuVisible ? 'block' : 'none'}
-    let {maxHeight, ...otherstyle} = style
-    
+    const style = { ...(menuStyle || {}), display: menuVisible ? 'block' : 'none' }
+    let { maxHeight, ...otherstyle } = style
+
     return (
       <div style={otherstyle} className={`${prefixCls}-menu`} onClick={this._suppressRootCloseHandler}>
         {/** TODO: 是否有递归遍历其所有子节点，找到这里需要接管的组件（Tree, List）？**/}
@@ -143,13 +143,13 @@ class Select extends React.Component {
             // 这里获取最新数据
             const { data, expanded } = this.state
             let element
-            
+
             if (!data || data.length <= 0) {
               element = (<p className="empty-data-text">{emptyDataText}</p>)
             } else {
               let props = {
                 data: data,
-                bordered: false, 
+                bordered: false,
                 expanded,
                 onExpand: this.onExpand,
                 onSelect: this.onSelect,
@@ -159,22 +159,22 @@ class Select extends React.Component {
 
               element = React.cloneElement(child, props)
             }
-            
+
             // 添加搜索框
             if (search) {
               const _maxHeight = maxHeight || 150
               element = (
                 <div>
                   <div className="search-input-wrapper">
-                    <input 
-                      ref={this.searchInputRef} 
-                      type="text" 
+                    <input
+                      ref={(node) => { this.searchInput = node }}
+                      type="text"
                       placeholder={searchInputPlaceholder}
                       value={searchInputValue}
-                      onChange={this.handleSearchInputChange}/>
-                    <i className="icon-search"/>
+                      onChange={this.handleSearchInputChange} />
+                    <i className="icon-search" />
                   </div>
-                  <div style={{maxHeight: _maxHeight, overflow: 'auto'}}>{element}</div>
+                  <div style={{ maxHeight: _maxHeight, overflow: 'auto' }}>{element}</div>
                 </div>
               )
             }
@@ -204,8 +204,8 @@ class Select extends React.Component {
   updateMenuProps(node, elementType) {
     // 把要接管的组件props存储起来，方便后面使用
     const { data, expanded, defaultExpanded } = node.props
-    
-    if (data !== this.menuProps.data ) {
+
+    if (data !== this.menuProps.data) {
       // 重置state
       this.state.data = data
       this.state.expanded = (this.initial ? (expanded || defaultExpanded) : expanded) || []
@@ -223,21 +223,21 @@ class Select extends React.Component {
     this.menuProps = node.props
     this.menuType = elementType
     this.updateInputValue()
-    
+
   }
 
   updateInputValue() {
-    const { 
+    const {
       data,
-      commbox, 
-      selected, 
-      defaultSeleced, 
-      checked, 
+      commbox,
+      selected,
+      defaultSeleced,
+      checked,
       defaultChecked
     } = this.menuProps
 
     let selectedValues, selectedDatas = []
-    
+
     if (commbox) {
       selectedValues = (this.initial ? (checked || defaultChecked) : checked) || []
     } else {
@@ -298,10 +298,10 @@ class Select extends React.Component {
     }, () => {
       if (this.state.menuVisible) {
         this.bindRootCloseHandlers()
-        
+
         // 让搜索框获得焦点
         if (this.props.search) {
-          const input = this.refs[this.searchInputRef]
+          const input = this.searchInput
           input && input.focus()
         }
       } else if (!this.state.menuVisible) {
@@ -369,7 +369,7 @@ class Select extends React.Component {
         data.length > 0 && (inputValue = data.map(o => o.text).join(', '))
       } else {
         inputValue = data.text
-      }  
+      }
     }
     initial ? (this.state.inputValue = inputValue) : this.setState({ inputValue })
   }
@@ -380,7 +380,7 @@ class Select extends React.Component {
   }
 
   handleSearchInputChange() {
-    const searchInputValue = this.refs[this.searchInputRef].value
+    const searchInputValue = this.searchInput && this.searchInput.value
     let result
 
     // 使用输入法时，每次keyDown都会触发该onChange事件，但input的值实际上还没变更，这里判断一下
@@ -391,7 +391,7 @@ class Select extends React.Component {
       } else {
         result = this.filterListDatas(searchInputValue)
       }
-      
+
       this.setState({
         ...(result || {}),
         searchInputValue
@@ -403,7 +403,7 @@ class Select extends React.Component {
     const { data } = this.menuProps
     let expanded = []
     if (!keyWord) {
-      return {data}
+      return { data }
     }
     // 重置树节点数据
     const tree = this.dataTree
@@ -413,40 +413,40 @@ class Select extends React.Component {
       // 如果存在多各根节点的情形
       if (node._depth == 1 && node._childNodes.length > 1) {
         node._childNodes.forEach(nodeItem => {
-          this.loopDFS_keyWord(nodeItem,expanded,keyWord)
+          this.loopDFS_keyWord(nodeItem, expanded, keyWord)
         })
       } else {
-        this.loopDFS_keyWord(node,expanded,keyWord)
+        this.loopDFS_keyWord(node, expanded, keyWord)
       }
     })
 
-    const afterFilter = this.filterExpanedTree( tree.export() )
+    const afterFilter = this.filterExpanedTree(tree.export())
     // 重置
     this.dataTree.import(data.slice())
 
     // 只搜索到一个节点时，不展开该节点
-    if (expanded.length === 1) return { data:afterFilter, expanded: [] };
-    else if (expanded.length > 1) return { data:afterFilter, expanded };
+    if (expanded.length === 1) return { data: afterFilter, expanded: [] };
+    else if (expanded.length > 1) return { data: afterFilter, expanded };
     else return { data: null }
 
   }
-  
+
   loopDFS_keyWord(node, expanded, keyWord) {
     const nodeData = node.data()
-    if (nodeData.text.indexOf( keyWord ) > -1) {
-      expanded.push( nodeData.id )
-      Object.assign(nodeData,{expanded: true})
+    if (nodeData.text.indexOf(keyWord) > -1) {
+      expanded.push(nodeData.id)
+      Object.assign(nodeData, { expanded: true })
       //获取它所有的祖先节点，把它的ID放到map中
       node.getAncestry().forEach(item => {
         const id = item.data().id
-        item.data({...item.data(), expanded: true})
+        item.data({ ...item.data(), expanded: true })
         if (this.contains(id, expanded) === false) {
-          expanded.push( id )
+          expanded.push(id)
         }
       })
-    }else{
+    } else {
       // 为避免上次记录被保存，没有展开的再次遍历，设置false
-      Object.assign(nodeData,{expanded: false})
+      Object.assign(nodeData, { expanded: false })
     }
   }
 
@@ -459,7 +459,7 @@ class Select extends React.Component {
       }
     })
     return bool
-  } 
+  }
 
   // 对过滤展开的树进行递归筛选
   filterExpanedTree(treeDatas) {
@@ -467,13 +467,13 @@ class Select extends React.Component {
     const loopTree = (trees, store) => {
       Array.isArray(trees) && trees.map(item => {
         if (item.expanded === true) {
-          const { children, ...node} = item
+          const { children, ...node } = item
           const childrens = this.childNodeHasExpaned(item.children) ? [] : item.children
-          Object.assign(node,{children: childrens})
-          store.push(node)  
+          Object.assign(node, { children: childrens })
+          store.push(node)
           loopTree(item.children, node.children)
         }
-      }) 
+      })
     }
     loopTree(treeDatas, tree)
     return tree
