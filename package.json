@@ -1,6 +1,6 @@
 {
   "name": "rt-tree",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "tree, select, tree-select ui component for react",
   "main": "lib/index.js",
   "scripts": {
@@ -42,8 +42,8 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "prop-types": "^15.6.0",
-    "react": "^15.6.2",
-    "react-dom": "^15.6.2"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.3.26",

@@ -4,13 +4,13 @@ import classnames from 'classnames'
 import TreeNode from './TreeNode'
 import DataTree from './helpers/dataTree'
 
-import { 
-  noop, 
+import {
+  noop,
   checkStateToBoolean,
   booleanToCheckState,
   CHECKBOX_CHECKED,
   CHECKBOX_UNCHECKED,
-  CHECKBOX_PARTIAL 
+  CHECKBOX_PARTIAL
 } from './helpers/util'
 
 class Tree extends React.Component {
@@ -21,7 +21,7 @@ class Tree extends React.Component {
       'onExpand',
       'onSelect',
       'onCheck'
-    ].forEach((m)=> {
+    ].forEach((m) => {
       this[m] = this[m].bind(this);
     });
 
@@ -60,6 +60,7 @@ class Tree extends React.Component {
      */
     this.dataTree = new DataTree().import(props.data.slice())
 
+    this._refs = {}
   }
 
   componentWillReceiveProps(nextProps) {
@@ -74,7 +75,7 @@ class Tree extends React.Component {
 
       treeDatas = nextProps.data
       this.dataTree.import(data.slice())
-      
+
     }
 
     if (checked !== nextProps.checked) {
@@ -91,15 +92,15 @@ class Tree extends React.Component {
 
     this.initial = !(nextProps.data && nextProps.data.length > 0)
 
-    this.setState({treeDatas, checkedMaps, selectedMaps, expandedMaps})
-      
+    this.setState({ treeDatas, checkedMaps, selectedMaps, expandedMaps })
+
   }
 
   render() {
     const { data, animate, bordered, className, style, width, height, prefixCls, children, ...otherProps } = this.props
     const { treeDatas } = this.state
     const wrapperPrefixCls = `${prefixCls}-panel`
-    const wrapperStyle = {...(style || {}), width, height}
+    const wrapperStyle = { ...(style || {}), width, height }
     const wrapperCls = {
       [wrapperPrefixCls]: true,
       [`${wrapperPrefixCls}-bordered`]: bordered
@@ -107,15 +108,15 @@ class Tree extends React.Component {
     const treeCls = {
       [prefixCls]: true
     }
-  	
+
     return (
-    	<div unselectable style={wrapperStyle} className={classnames(className, wrapperCls)}>
-    		<ul {...otherProps} className={classnames(treeCls)}>       
+      <div unselectable style={wrapperStyle} className={classnames(className, wrapperCls)}>
+        <ul {...otherProps} className={classnames(treeCls)}>
           {treeDatas.map((item, index) => {
             return this.generateTreeNode(item, index)
           })}
         </ul>
-    	</div>      
+      </div>
     );
   }
 
@@ -128,7 +129,7 @@ class Tree extends React.Component {
     if (commbox) {
       // 多选情况下，其父、子节点的级联选中状态不作处理，当它传递的值是“有效的”
       // 这和在外面维护checked这个值是一样的，它通过props传递过来，以更新commbox的选中状态
-      multiple ? values.forEach(item => (map[item] = CHECKBOX_CHECKED)) : map[ values[0] ] = CHECKBOX_CHECKED
+      multiple ? values.forEach(item => (map[item] = CHECKBOX_CHECKED)) : map[values[0]] = CHECKBOX_CHECKED
     }
 
     // 如果values为空的情况，应当清空原有数据
@@ -146,7 +147,7 @@ class Tree extends React.Component {
     let map = {}
 
     // 单选模式下，只选取第一个值
-    multiple ? values.forEach(item => (map[item] = true)) : map[ values[0] ] = true
+    multiple ? values.forEach(item => (map[item] = true)) : map[values[0]] = true
 
     // 如果values为空的情况，应当清空原有数据
     if (values.length == 0) {
@@ -200,12 +201,12 @@ class Tree extends React.Component {
     const checked = checkedMaps[value] || CHECKBOX_UNCHECKED
     const expanded = expandedMaps[value] || false
     const leaf = !children || children.length <= 0
-    const _customerIcon = customerIcon && typeof customerIcon == 'function' ? customerIcon(nodeData, expanded) : null  
+    const _customerIcon = customerIcon && typeof customerIcon == 'function' ? customerIcon(nodeData, expanded) : null
     const _disabled = typeof disabled == 'boolean' ? disabled : (typeof disabled == 'function' ? disabled(nodeData) : false)
     let childNodes
-    
+
     let nodeProps = {
-      ref: `node-${path}`,
+      ref: (instance) => { this._refs[`node-${path}`] = instance },
       key: path,
       data: nodeData,
       childData: children,
@@ -216,7 +217,7 @@ class Tree extends React.Component {
       text,
       path,
       customerNode,
-      selected, 
+      selected,
       checked,
       expanded,
       leaf,
@@ -230,12 +231,12 @@ class Tree extends React.Component {
     // 生成已展开的子节点
     if (expanded && children && children.length) {
       childNodes = (
-          <ul>
-            {children.map((item, index) => {
-              return this.generateTreeNode(item, index, nodeData, path)
-            })}
-          </ul>
-        )
+        <ul>
+          {children.map((item, index) => {
+            return this.generateTreeNode(item, index, nodeData, path)
+          })}
+        </ul>
+      )
     }
 
     // 节点的ref为`node-${path}`的方式，为方便通过ID获取节点对象，这里把node缓存起来
@@ -253,7 +254,7 @@ class Tree extends React.Component {
     // 如果外面没有传递expanded值过来，即调用setState()更新UI，否则就让外面维护这个状态
     if (!('expanded' in this.props)) {
       this.setState({
-        expandedMaps: {...expandedMaps, [node.props.value]: expanded}
+        expandedMaps: { ...expandedMaps, [node.props.value]: expanded }
       })
     }
     this.props.onExpand(expanded, node)
@@ -268,33 +269,33 @@ class Tree extends React.Component {
     // 新增。如果是被禁用状态. 则单击则展开
     if (onSelect(selected, value, data, node) === false) {
       const expanded = expandedMaps[node.props.value]
-      
+
       this.setState({
-        expandedMaps: {...expandedMaps, [node.props.value]: !expanded}
+        expandedMaps: { ...expandedMaps, [node.props.value]: !expanded }
       })
 
       return
     }
-    
+
     // 如果外面没有传递selected值过来，即调用setState()更新UI，否则就让外面维护这个状态
     if (!('selected' in this.props)) {
       // 多选且没有commbox时，才允许选择多个，否则它的选中以commbox为主
       if (multiple && !commbox) {
         this.setState({
-          selectedMaps: {...selectedMaps, [value]: selected}
+          selectedMaps: { ...selectedMaps, [value]: selected }
         })
       } else {
         this.setState({
-          selectedMaps: {[value]: selected}
+          selectedMaps: { [value]: selected }
         })
-      }      
+      }
     }
 
     // 多选，且有commbox时，不触发其onChange事件，以commbox的check为主
     // 单选，且有commbox时，该onSelect不会被触发，这里不需处理
     if (!(multiple && commbox)) {
       this.setSelectedNodes(selected, data, 'selectedNodes')
-      this.fireChange({selected, value, data, node, selectedNodes: this.selectedNodes})
+      this.fireChange({ selected, value, data, node, selectedNodes: this.selectedNodes })
     }
 
   }
@@ -312,27 +313,27 @@ class Tree extends React.Component {
     this.toggleCheckState(checked, data)
 
     // 如果外面没有传递checked值过来，即调用setState()更新UI，否则就让外面维护这个状态
-    if (!('checked' in this.props)) {     
+    if (!('checked' in this.props)) {
       this.setState({
         // 在遍历当前节点的父、子节点，并改变它的check state时，并没有调用setState()更新，这里统一处理
         checkedMaps: this.state.checkedMaps,
         // 单选情况下，把selected一起更新
-        selectedMaps: !multiple ? {[value]: checkStateToBoolean(checked)} : this.state.selectedMaps
+        selectedMaps: !multiple ? { [value]: checkStateToBoolean(checked) } : this.state.selectedMaps
       })
     }
-    
-    this.fireChange({selected: checkState, value, data, node, selectedNodes: this.checkedNodes})
-    
+
+    this.fireChange({ selected: checkState, value, data, node, selectedNodes: this.checkedNodes })
+
   }
 
   setSelectedNodes(selected, data, dataKey) {
     const { multiple } = this.props
     if (multiple) {
       if (selected) {
-        this[dataKey].push( data )
+        this[dataKey].push(data)
       } else {
         this[dataKey] = this[dataKey].filter(item => item.id !== data.id)
-      } 
+      }
     } else {
       this[dataKey] = [data]
     }
@@ -346,17 +347,17 @@ class Tree extends React.Component {
     if (multiple) {
       let values = [], datas = []
       selectedNodes.forEach(data => {
-        values.push( data.id )
-        datas.push( data )
+        values.push(data.id)
+        datas.push(data)
       })
       // 如果是选中的情形下
       if (selected) {
         propsValues.forEach(item => {
           if (!this.contains(item, values)) {
-            values.push( item )
-            datas.push( this.getNodeById(value) )
+            values.push(item)
+            datas.push(this.getNodeById(value))
           }
-        })  
+        })
       } else {
         if (!commbox) {
           values = [], datas = []
@@ -367,11 +368,11 @@ class Tree extends React.Component {
             propsValues.splice(index, 1)
           }
           propsValues.forEach(item => {
-            values.push( item )
-            datas.push( this.getNodeById(item) )
+            values.push(item)
+            datas.push(this.getNodeById(item))
           })
         }
-        
+
       }
       onChange(values, datas, node)
     } else {
@@ -381,12 +382,12 @@ class Tree extends React.Component {
   }
 
   toggleCheckState(checked, nodeData) {
-    const { multiple, checkStrictly } = this.props    
+    const { multiple, checkStrictly } = this.props
 
     // 不是多选或开启多选严格模式时，选中哪个节点就仅仅选中哪个节点，不作关联操作
     if (!multiple) { // 单选
-      this.state.checkedMaps = {[nodeData.id]: checked}
-    } else if(multiple && checkStrictly) { // 多选，且开启了多选的严格模式
+      this.state.checkedMaps = { [nodeData.id]: checked }
+    } else if (multiple && checkStrictly) { // 多选，且开启了多选的严格模式
       this.state.checkedMaps[nodeData.id] = checked
     } else { // 级联多选
 
@@ -411,7 +412,7 @@ class Tree extends React.Component {
    * @return {Object}      返回搜索到的节点对象
    */
   findNode(path) {
-    return this.refs[`node-${path}`]
+    return this._refs[`node-${path}`]
   }
 
   /**
@@ -424,8 +425,8 @@ class Tree extends React.Component {
   }
 
   getParentNode(nodeData) {
-    const node = this.nodeMaps[ nodeData.id ] || {props: {}}
-    return this.findNode(this.getParentPath( node.props.path ))
+    const node = this.nodeMaps[nodeData.id] || { props: {} }
+    return this.findNode(this.getParentPath(node.props.path))
   }
 
   /**
@@ -445,9 +446,9 @@ class Tree extends React.Component {
 
       children.forEach(child => {
         // 这里需要取到TreeNode节点对象，以便获取它现在的选择状态
-        const node = this.nodeMaps[ child.id ]
+        const node = this.nodeMaps[child.id]
         // 节点的checkState在checkMaps中可能已发生变化，但UI还没更新，这里需要从checkedMaps中获取它最新的checkState
-        const childCheckState = checkedMaps[node.props.value] !== undefined ? checkedMaps[node.props.value] : node.props.checked 
+        const childCheckState = checkedMaps[node.props.value] !== undefined ? checkedMaps[node.props.value] : node.props.checked
 
         if (childCheckState === CHECKBOX_CHECKED) {
           sumChecked++
@@ -490,7 +491,7 @@ class Tree extends React.Component {
    * @param  {[type]}   checkState [description]
    * @return {[type]}        [description]
    */
-  cascade(cb, nodeData, checkState) {    
+  cascade(cb, nodeData, checkState) {
     if (cb.call(this, nodeData, checkState) !== false) {
       nodeData.children && nodeData.children.length && nodeData.children.forEach(child => {
         this.cascade(cb, child, checkState)
@@ -514,7 +515,7 @@ class Tree extends React.Component {
 
   indexOf(id, container) {
     let i = -1
-    container.forEach((item,key) => {
+    container.forEach((item, key) => {
       if (item === id) {
         return i = key
       }
@@ -522,7 +523,7 @@ class Tree extends React.Component {
     return i
   }
 
-  getNodeById (id) {
+  getNodeById(id) {
     const tree = this.dataTree
     let targetNode = null
     tree.traverseDFS((node) => {
@@ -531,18 +532,18 @@ class Tree extends React.Component {
         node._childNodes.forEach(nodeItem => {
           if (nodeItem._data.id === id) {
             return targetNode = nodeItem._data
-          } 
+          }
         })
       } else {
         if (node._data.id === id) {
           targetNode = node._data
-        } 
+        }
       }
     })
     return targetNode
   }
 
-  getDirectParentNode (id) {
+  getDirectParentNode(id) {
     const tree = this.dataTree
     let targetNode = null
     tree.traverseDFS((node) => {
@@ -567,19 +568,19 @@ class Tree extends React.Component {
         })
       }
     })
-    return targetNode 
+    return targetNode
   }
 }
 
 Tree.propTypes = {
   width: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string
-    ]),
+    PropTypes.number,
+    PropTypes.string
+  ]),
   height: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string
-    ]),
+    PropTypes.number,
+    PropTypes.string
+  ]),
   /**
    * 树组件的data数据集
    */
@@ -588,9 +589,9 @@ Tree.propTypes = {
    * 根节点
    */
   rootNode: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.element
-    ]),
+    PropTypes.bool,
+    PropTypes.element
+  ]),
   /**
    * 是否在展开、收缩节点时添加动画
    */
