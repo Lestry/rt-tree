@@ -107,7 +107,7 @@ class Select extends React.Component {
   }
 
   render() {
-    const { className, prefixCls, children, onClear, ...otherProps } = this.props
+    const { className, prefixCls, children, onClear, menuStyle, emptyDataText, searchInputPlaceholder, selectToClose, ...otherProps } = this.props
 
     return (
       <div {...otherProps} className={classnames(className, prefixCls)}>
