@@ -110,7 +110,7 @@ class Tree extends React.Component {
     }
 
     return (
-      <div unselectable style={wrapperStyle} className={classnames(className, wrapperCls)}>
+      <div unselectable="true" style={wrapperStyle} className={classnames(className, wrapperCls)}>
         <ul {...otherProps} className={classnames(treeCls)}>
           {treeDatas.map((item, index) => {
             return this.generateTreeNode(item, index)

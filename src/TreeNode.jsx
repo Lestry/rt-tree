@@ -14,7 +14,7 @@ class TreeNode extends React.Component {
       'onExpand',
       'onSelect',
       'onCheck'
-    ].forEach((m)=> {
+    ].forEach((m) => {
       this[m] = this[m].bind(this);
     });
   }
@@ -30,18 +30,18 @@ class TreeNode extends React.Component {
       [`${prefixCls}-checked`]: checked,
       [`${prefixCls}-disabled`]: disabled // 是否禁用
     }
-  	
+
     return (
-    	<li className={classnames(className, classes)} onMouseOver={this.handleHoverCustomer.bind(this,'in')} onMouseOut={this.handleHoverCustomer.bind(this,'out')} aria-value={value} aria-expanded={expanded} aria-selected={selected}>
+      <li className={classnames(className, classes)} onMouseOver={this.handleHoverCustomer.bind(this, 'in')} onMouseOut={this.handleHoverCustomer.bind(this, 'out')} aria-valuenow={value} aria-expanded={expanded} aria-selected={selected}>
         {/** 叶节点，只添加空白的占位元素，用于文本对齐 **/}
-        {this.isLeaf() ? <i /> : <i className="icon-arrow" onClick={this.onExpand}/>}
+        {this.isLeaf() ? <i /> : <i className="icon-arrow" onClick={this.onExpand} />}
         {/** 添加commbox **/}
         {this.renderCommbox()}
         {customerIcon}
         <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}</a>
         {children}
         {customerNode && this.renderCustomerNode()}
-      </li>     
+      </li>
     );
   }
 
@@ -55,15 +55,15 @@ class TreeNode extends React.Component {
     const commboxCls = `${commboxPrefixCls}-${checked}`
 
     return (
-        <i className={commboxCls} onClick={this.onCheck} aria-checked={checked} />
-      )
+      <i className={commboxCls} onClick={this.onCheck} aria-checked={checked} />
+    )
   }
 
   renderCustomerNode() {
     const { customerNode, data } = this.props
     return customerNode.onAdd && (
-      <div className={classnames('customer-node',{hover: customerNode.hover})}>
-        {customerNode.onAdd(data)}   
+      <div className={classnames('customer-node', { hover: customerNode.hover })}>
+        {customerNode.onAdd(data)}
       </div>
     )
   }
@@ -83,28 +83,28 @@ class TreeNode extends React.Component {
     }
 
     return (
-        <ul>
-          {React.Children.map(children, (child, index) => {
-            return tree.renderTreeNode(child, index, this, path)
-          }, tree)}
-        </ul>
-      )
+      <ul>
+        {React.Children.map(children, (child, index) => {
+          return tree.renderTreeNode(child, index, this, path)
+        }, tree)}
+      </ul>
+    )
   }
 
-  handleHoverCustomer(type,e) {
+  handleHoverCustomer(type, e) {
     e.stopPropagation();
     const { customerNode, prefixCls } = this.props
-    if(!(customerNode && customerNode.hover)) return false;
+    if (!(customerNode && customerNode.hover)) return false;
 
     let target = $(e.target)
 
     let straigtNode = target.hasClass(prefixCls) ? target : target.closest('.' + prefixCls)
 
-    switch(type){
-      case 'in' : {
+    switch (type) {
+      case 'in': {
         straigtNode.children('.customer-node').show()
       }; break;
-      case 'out' : {
+      case 'out': {
         straigtNode.find('.customer-node').hide()
       }; break;
     }
