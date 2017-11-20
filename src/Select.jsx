@@ -54,7 +54,7 @@ class Select extends React.Component {
        * 搜索框显示的值
        * @type {String}
        */
-      searchInputValue: undefined
+      searchInputValue: ''
     }
     /**
      * 初始化状态标识
@@ -107,7 +107,7 @@ class Select extends React.Component {
   }
 
   render() {
-    const { className, prefixCls, children, onClear, menuStyle, emptyDataText, searchInputPlaceholder, selectToClose, ...otherProps } = this.props
+    const { className, prefixCls, children, onClear, menuStyle, emptyDataText, searchInputPlaceholder, selectToClose, search, ...otherProps } = this.props
 
     return (
       <div {...otherProps} className={classnames(className, prefixCls)}>
@@ -210,7 +210,7 @@ class Select extends React.Component {
       this.state.data = data
       this.state.expanded = (this.initial ? (expanded || defaultExpanded) : expanded) || []
       // this.state.inputValue = null
-      this.state.searchInputValue = null
+      this.state.searchInputValue = ''
 
       if (this.isTreeElement(elementType)) {
         this.dataTree = new DataTree().import(data.slice())

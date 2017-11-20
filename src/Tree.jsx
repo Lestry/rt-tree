@@ -97,7 +97,7 @@ class Tree extends React.Component {
   }
 
   render() {
-    const { data, animate, bordered, className, style, width, height, prefixCls, children, defaultExpanded, customerNode, customerIcon, useArrow, onExpand, onCheck, ...otherProps } = this.props
+    const { data, animate, bordered, disabled, className, style, width, height, prefixCls, children, defaultExpanded, customerNode, customerIcon, useArrow, onExpand, onCheck, ...otherProps } = this.props
     const { treeDatas } = this.state
     const wrapperPrefixCls = `${prefixCls}-panel`
     const wrapperStyle = { ...(style || {}), width, height }
