@@ -6,3 +6,4 @@ dist/
 assets/
 lib/
 .babel-cache/
+package-lock.json
