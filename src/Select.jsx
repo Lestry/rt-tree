@@ -475,7 +475,6 @@ class Select extends React.Component {
     const tree = []
     const loopTree = (trees, store) => {
       Array.isArray(trees) && trees.map(item => {
-        console.log(item)
         if (item.expanded === true) {
           const { children, ...node } = item
           const childrens = this.childNodeHasExpaned(item.children) ? [] : item.children
