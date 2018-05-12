@@ -423,20 +423,20 @@ class Select extends React.Component {
     const afterFilter = this.filterExpanedTree(tree.export())
     // 重置
     this.dataTree.import(data.slice())
-
     // 只搜索到一个节点时，不展开该节点
     if (expanded.length === 1) return { data: afterFilter, expanded: [] };
     else if (expanded.length > 1) return { data: afterFilter, expanded };
     else return { data: null }
-
   }
 
   loopDFS_keyWord(node, expanded, keyWord) {
     const nodeData = node.data()
-    if (nodeData.text.indexOf(keyWord) > -1) {
+    // 添加大小写忽略
+    if (nodeData.text.toUpperCase().indexOf(keyWord.toUpperCase()) > -1) {
+      // 将自身放到map中
       expanded.push(nodeData.id)
       Object.assign(nodeData, { expanded: true })
-      //获取它所有的祖先节点，把它的ID放到map中
+      // 获取它所有的祖先节点 把它的ID放到map中
       node.getAncestry().forEach(item => {
         const id = item.data().id
         item.data({ ...item.data(), expanded: true })
@@ -444,7 +444,16 @@ class Select extends React.Component {
           expanded.push(id)
         }
       })
-    } else {
+      // 获取所有的子节点 并把ID放到map中
+      node.childNodes().forEach(item => {
+        const id = item.data().id
+        item.data({ ...item.data(), expanded: true })
+        if (this.contains(id, expanded) === false) {
+          expanded.push(id)
+        }
+      })
+    } else if (this.contains(nodeData.id, expanded) === false) {
+      // 为了避免父级匹配而添加上的子节点被重置expanded为false 增加判断
       // 为避免上次记录被保存，没有展开的再次遍历，设置false
       Object.assign(nodeData, { expanded: false })
     }
@@ -466,6 +475,7 @@ class Select extends React.Component {
     const tree = []
     const loopTree = (trees, store) => {
       Array.isArray(trees) && trees.map(item => {
+        console.log(item)
         if (item.expanded === true) {
           const { children, ...node } = item
           const childrens = this.childNodeHasExpaned(item.children) ? [] : item.children
