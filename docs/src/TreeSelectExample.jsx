@@ -118,10 +118,10 @@ class TreeSelectExample extends React.Component {
     		</div>*/}
     		<Tree 
     			expandAll={expandAll} 
-          defaultExpanded={['1', '0-1']}
+          defaultExpanded={['1', '1-0']}
     			data={treeData}
     		  checked={checked}
-          disabled={this.disabled.bind(this)}
+					disabled={this.disabled.bind(this)}
     			onExpand={this.onExpand}
     			onSelect={this.onSelect}
     			onCheck={this.onCheck}

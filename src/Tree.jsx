@@ -194,7 +194,7 @@ class Tree extends React.Component {
     }
 
     const { expandedMaps, selectedMaps, checkedMaps } = this.state
-    const { multiple, commbox, animate, customerNode, customerIcon, disabled } = this.props
+    const { multiple, commbox, animate, customerNode, customerText, customerIcon, disabled } = this.props
     const { id: value, text, children } = nodeData
     const path = nodeData.path || `${prePath}-${index}`
     const selected = selectedMaps[value] || false
@@ -212,11 +212,13 @@ class Tree extends React.Component {
       childData: children,
       customerIcon: _customerIcon,
       disabled: _disabled,
+      // 20180620新增 用于自定义文字
+      text: typeof customerText === 'function' ? customerText(nodeData) : text,
       parentData,
       value,
-      text,
       path,
       customerNode,
+      customerText,
       selected,
       checked,
       expanded,
@@ -672,6 +674,15 @@ Tree.propTypes = {
     hover: PropTypes.bool // 触发点
   }),
 
+  /* 
+  * 文字自定义
+  * @type {[function(node)]}
+  */
+  customerText: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.func
+  ]),
+
   // customerIcon
   // params ｛item｝当前结点数据
   // 对自定义icon的 处理函数
@@ -693,7 +704,8 @@ Tree.defaultProps = {
   onExpand: noop,
   onSelect: noop,
   onCheck: noop,
-  onChange: noop
+  onChange: noop,
+  customerText: false
 }
 
 Tree.elementType = 'Tree'
