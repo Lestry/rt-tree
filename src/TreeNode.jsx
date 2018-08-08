@@ -21,7 +21,7 @@ class TreeNode extends React.Component {
 
   render() {
     const props = this.props
-    const { value, text, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children, customerNode, disabled, customerIcon } = props
+    const { value, text, date, selected, multiple, commbox, checked, expanded, qtip, prefixCls, className, children, customerNode, disabled, showDate, customerIcon } = props
     const classes = {
       [prefixCls]: true,
       // 展开节点后的样式
@@ -38,7 +38,11 @@ class TreeNode extends React.Component {
         {/** 添加commbox **/}
         {this.renderCommbox()}
         {customerIcon}
-        <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}</a>
+        {
+          showDate
+            ? <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}<span className="date-layout">{date}</span></a>
+            : <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}</a>
+        }
         {children}
         {customerNode && this.renderCustomerNode()}
       </li>

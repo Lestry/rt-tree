@@ -1,10 +1,15 @@
-.rt-tree-panel { 
-	overflow: auto; 
+.rt-tree-panel {
+	overflow: auto;
 	background-color: @bg-color;
 
 	&.rt-tree-panel-bordered {
 		border: 1px solid @border-color;
 	}
+}
+.date-layout {
+	float: right;
+	color: #6E8CAF;
+	font-size: 12px;
 }
 .rt-tree {
 	list-style-type: none;
@@ -12,7 +17,7 @@
 	padding: 5px;
 	outline: 0;
 	.user-select(none);
-	
+
 	// tree-node
 	li {
 		list-style: none;
@@ -30,7 +35,7 @@
 				display: none;
 			}
 		}
-		
+
 		> i {
 			display: block;
 	    float: left;
@@ -44,13 +49,13 @@
 	    color: @tree-node-icon-color;
 
 	    &.icon-arrow {
-	    	padding: 1px; 
+	    	padding: 1px;
 	    	font-size: 12px;
 			}
 		}
 
 		> a {
-			display: block; 
+			display: block;
 	    padding: 2px 3px;
 	    cursor: pointer;
 	    font-size: @font-size-base;
@@ -59,7 +64,7 @@
 	    vertical-align: top;
 	    text-align: left;
 	    color: @font-color;
-	
+
 	    &:hover {
 	    	background: #f5f5f5;
 	    }
@@ -109,5 +114,5 @@
 			cursor: not-allowed;
 		}
 
-	} 
+	}
 }

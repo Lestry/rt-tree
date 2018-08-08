@@ -194,8 +194,8 @@ class Tree extends React.Component {
     }
 
     const { expandedMaps, selectedMaps, checkedMaps } = this.state
-    const { multiple, commbox, animate, customerNode, customerText, customerIcon, disabled } = this.props
-    const { id: value, text, children } = nodeData
+    const { multiple, commbox, animate, customerNode, customerText, customerIcon, disabled, showDate } = this.props
+    const { id: value, text, date, children } = nodeData
     const path = nodeData.path || `${prePath}-${index}`
     const selected = selectedMaps[value] || false
     const checked = checkedMaps[value] || CHECKBOX_UNCHECKED
@@ -214,6 +214,8 @@ class Tree extends React.Component {
       disabled: _disabled,
       // 20180620新增 用于自定义文字
       text: typeof customerText === 'function' ? customerText(nodeData) : text,
+      date,
+      showDate,
       parentData,
       value,
       path,
@@ -248,7 +250,7 @@ class Tree extends React.Component {
   /**
    * 节点展开、收缩事件，从TreeNode回调过来
    * @param  {Boolean} expanded 标识当前是展开还是收缩动作
-   * @param  {TreeNode} node   节点对象        
+   * @param  {TreeNode} node   节点对象
    */
   onExpand(expanded, node) {
     // console.log('Tree.onExpand', expanded, node)
@@ -502,7 +504,7 @@ class Tree extends React.Component {
   }
 
   /**
-   * 包含 contains 
+   * 包含 contains
    * @return {[type]} [description]
    */
   contains(id, container) {
@@ -674,7 +676,7 @@ Tree.propTypes = {
     hover: PropTypes.bool // 触发点
   }),
 
-  /* 
+  /*
   * 文字自定义
   * @type {[function(node)]}
   */
