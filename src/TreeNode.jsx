@@ -40,7 +40,10 @@ class TreeNode extends React.Component {
         {customerIcon}
         {
           showDate
-            ? <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}<span className="date-layout">{date}</span></a>
+            ? <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>
+                <span className="tree-text">{text}</span>
+                <span className="date-layout">{date}</span>
+              </a>
             : <a onClick={this.onSelect} onDoubleClick={this.onExpand} title={qtip || text}>{text}</a>
         }
         {children}
